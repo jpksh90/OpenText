@@ -1,5 +1,6 @@
 plugins {
     kotlin("jvm") version "1.9.23"
+    application
 }
 
 group = "org.example"
@@ -11,6 +12,10 @@ repositories {
 
 dependencies {
     testImplementation("org.jetbrains.kotlin:kotlin-test")
+}
+
+application {
+    mainClass = "org.example.Main"
 }
 
 tasks.test {

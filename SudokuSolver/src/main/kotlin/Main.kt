@@ -1,98 +1,155 @@
 package org.example
 
-fun isValid(puzzle: Array<Array<Int>>, row: Int, col: Int, num: Int): Boolean {
-    for (i in puzzle.indices) {
-        if (puzzle[row][i] == num || puzzle[i][col] == num) {
+class Sudoku(private var puzzle: Array<Array<Int>>) {
+    private var count: Int = 0
+
+    private fun nextCell() : Pair<Int, Int> {
+        for (row in puzzle.indices) {
+            for (col in puzzle[row].indices) {
+                if (puzzle[row][col] == 0) {
+                    return Pair(row, col)
+                }
+            }
+        }
+        return Pair(-1,-1)
+    }
+
+    private fun isValid(row: Int, col: Int, num: Int): Boolean {
+        for (i in puzzle.indices) {
+            if (puzzle[row][i] == num || puzzle[i][col] == num) {
+                return false
+            }
+        }
+        val startRow = 3 * (row / 3)
+        val startCol = 3 * (col / 3)
+        for (i in 0 until 3) {
+            for (j in 0 until 3) {
+                if (puzzle[startRow + i][startCol + j] == num) {
+                    return false
+                }
+            }
+        }
+        return true
+    }
+
+    override fun toString(): String {
+        return prettyString()
+    }
+
+    fun solve() : Boolean {
+        ++count
+        val (row, col) = nextCell()
+        if (row== -1 && col == -1) {
+            println("all cells filled")
+            return true;
+        } else {
+            for (num in 1..9) {
+                if (isValid(row, col, num)) {
+                    puzzle[row][col] = num
+                    if (solve()) {
+                        return true
+                    }
+                    puzzle[row][col] = 0
+                }
+            }
             return false
         }
     }
-    val startRow = 3 * (row / 3)
-    val startCol = 3 * (col / 3)
-    for (i in 0 until 3) {
-        for (j in 0 until 3) {
-            if (puzzle[startRow + i][startCol + j] == num) {
-                return false
-            }
-        }
-    }
-    return true
-}
 
-fun solve(puzzle: Array<Array<Int>>) : Boolean {
-    for (row in puzzle.indices) {
-        for (col in puzzle[row].indices) {
-            if (puzzle[row][col] == 0) {
-                for (num in 1..9) {
-                    if (isValid(puzzle, row, col, num)) {
-                        // try with a number num
-                        puzzle[row][col] = num
-                        if (solve(puzzle)) {
-                            return true
-                        }
-                        // else backtrack by setting board[i][j] = 0
-                        puzzle[row][col] = 0
-                    }
+    private fun prettyString() : String {
+        val buffer : StringBuilder = StringBuilder();
+        buffer.append("\n-----------------------\n")
+        for (i in puzzle.indices) {
+            buffer.append("|")
+            for (j in puzzle[i].indices) {
+                buffer.append("${puzzle[i][j]} ")
+                if (j%3 == 2) {
+                    buffer.append("|")
                 }
-                return false
+            }
+            if (i%3 == 2) {
+                buffer.append("\n-----------------------\n")
+            } else {
+                buffer.append("\n")
             }
         }
+        return buffer.toString()
     }
-    return true
+
+    fun print() {
+        println(prettyString())
+    }
+
+    fun nbIterations() : Int {
+        return count
+    }
+
 }
 
-fun printPuzzle(board: Array<Array<Int>>) {
-    for (i in board.indices) {
-        for (j in board[i].indices) {
-            print("${board[i][j]} ")
+fun run(puzzle: Array<Array<Int>>) {
+    val sudoku = Sudoku(puzzle)
+
+    println("Initial Board")
+    sudoku.print()
+
+    val begin = System.currentTimeMillis();
+    if (sudoku.solve()) {
+        val end = System.currentTimeMillis();
+        println("Solved Board")
+        sudoku.print();
+        println("Solved in ${sudoku.nbIterations()} iterations in ${end - begin} milliseconds")
+
+    } else {
+        println("failed to solve")
+        sudoku.print()
+    }
+}
+
+fun testDifficult() {
+    println("\n\nRunning Difficult Testcase")
+    run(
+        arrayOf(
+            arrayOf(0, 0, 2, 0, 0, 0, 0, 4, 1),
+            arrayOf(0, 0, 0, 0, 8, 2, 0, 7, 0),
+            arrayOf(0, 0, 0, 0, 4, 0, 0, 0, 9),
+            arrayOf(2, 0, 0, 0, 7, 9, 3, 0, 0),
+            arrayOf(0, 1, 0, 0, 0, 0, 0, 8, 0),
+            arrayOf(0, 0, 6, 8, 1, 0, 0, 0, 4),
+            arrayOf(1, 0, 0, 0, 9, 0, 0, 0, 0),
+            arrayOf(0, 6, 0, 4, 3, 0, 0, 0, 0),
+            arrayOf(8, 5, 0, 0, 0, 0, 4, 0, 0)
+        )
+    )
+}
+
+fun testEasy() {
+    println("\n\nRunning Easy Testcase")
+    run(
+        arrayOf(
+            arrayOf(0, 1, 3, 8, 0, 0, 4, 0, 5),
+            arrayOf(0, 2, 4, 6, 0, 5, 0, 0, 0),
+            arrayOf(0, 8, 7, 0, 0, 0, 9, 3, 0),
+            arrayOf(4, 9, 0, 3, 0, 6, 0, 0, 0),
+            arrayOf(0, 0, 1, 0, 0, 0, 5, 0, 0),
+            arrayOf(0, 0, 0, 7, 0, 1, 0, 9, 3),
+            arrayOf(0, 6, 9, 0, 0, 0, 7, 4, 0),
+            arrayOf(0, 0, 0, 2, 0, 7, 6, 8, 0),
+            arrayOf(1, 0, 2, 0, 0, 8, 3, 5, 0)
+        )
+    )
+}
+
+fun testZero() {
+    println("Running zero testcase")
+    run(
+        Array(9) {
+            Array(9) { 0 }
         }
-        println()
-    }
-}
-
-fun test1() {
-    val puzzle = arrayOf(
-        arrayOf(0, 0, 2, 0, 4, 1, 0, 0, 0),
-        arrayOf(0, 0, 8, 2, 0, 7, 0, 0, 0),
-        arrayOf(0, 0, 4, 0, 0, 0, 0, 0, 9),
-        arrayOf(2, 0, 7, 9, 3, 0, 0, 0, 0),
-        arrayOf(0, 1, 0, 0, 0, 8, 0, 0, 0),
-        arrayOf(0, 0, 6, 8, 1, 0, 0, 0, 4),
-        arrayOf(1, 0, 0, 0, 9, 0, 0, 0, 0),
-        arrayOf(0, 6, 0, 4, 3, 0, 0, 0, 0),
-        arrayOf(8, 5, 0, 0, 0, 0, 4, 0, 0)
     )
-    solve(puzzle);
-    printPuzzle(puzzle);
-}
-
-fun test2() {
-    val puzzle = arrayOf(
-        arrayOf(0, 1, 3, 8, 0, 0, 4, 0, 5),
-        arrayOf(0, 2, 4, 6, 0, 5, 0, 0, 0),
-        arrayOf(0, 8, 7, 0, 0, 0, 9, 3, 0),
-        arrayOf(4, 9, 0, 3, 0, 6, 0, 0, 0),
-        arrayOf(0, 0, 1, 0, 0, 0, 5, 0, 0),
-        arrayOf(0, 0, 0, 7, 0, 1, 0, 9, 3),
-        arrayOf(0, 6, 9, 0, 0, 0, 7, 4, 0),
-        arrayOf(0, 0, 0, 2, 0, 7, 6, 8, 0),
-        arrayOf(1, 0, 2, 0, 0, 8, 3, 5, 0)
-    )
-    solve(puzzle)
-    printPuzzle(puzzle);
 }
 
 fun main() {
-    val puzzle : Array<Array<Int>> = arrayOf(
-        arrayOf(1,3,8,0,0,0,0,0,4),
-        arrayOf(0,0,0,0,5,0,0,0,0),
-        arrayOf(2,4,6,5,0,0,0,0,0),
-        arrayOf(8,7,0,0,0,0,0,0,9),
-        arrayOf(0,0,3,0,0,0,0,0,0),
-        arrayOf(0,0,0,0,0,0,0,0,0),
-        arrayOf(0,0,0,0,0,0,0,0,0),
-        arrayOf(0,0,0,0,0,0,0,0,0),
-        arrayOf(0,0,0,0,0,0,0,0,0)
-    )
-    solve(puzzle);
-    printPuzzle(puzzle)
+    testZero()
+    testEasy()
+    testDifficult()
 }
