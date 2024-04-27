@@ -3,7 +3,7 @@ plugins {
     application
 }
 
-group = "org.example"
+group = "solution"
 version = "1.0-SNAPSHOT"
 
 repositories {
@@ -15,7 +15,17 @@ dependencies {
 }
 
 application {
-    mainClass = "org.example.Main"
+    mainClass.set("solution.MainKt")
+}
+
+tasks.jar {
+    manifest {
+        attributes["Main-Class"] = "solution.MainKt"
+    }
+    configurations["compileClasspath"].forEach { file: File ->
+        from(zipTree(file.absoluteFile))
+    }
+    duplicatesStrategy = DuplicatesStrategy.INCLUDE
 }
 
 tasks.test {

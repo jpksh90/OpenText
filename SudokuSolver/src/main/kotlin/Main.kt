@@ -1,4 +1,4 @@
-package org.example
+package solution
 
 class Sudoku(private var puzzle: Array<Array<Int>>) {
     private var count: Int = 0
@@ -139,17 +139,26 @@ fun testEasy() {
     )
 }
 
-fun testZero() {
-    println("Running zero testcase")
-    run(
-        Array(9) {
-            Array(9) { 0 }
+fun testDiagonal() {
+    println("Running diagonal matrix testcase")
+    var array = Array(9) {
+        Array(9) { 0 }
+    };
+    var count = 1;
+    for (row in array.indices) {
+        for (col in array[row].indices) {
+            if (row == col) {
+                array[row][col] = count
+            }
         }
-    )
+        ++count
+    }
+    run(array)
 }
 
+
 fun main() {
-    testZero()
+    testDiagonal()
     testEasy()
     testDifficult()
 }
