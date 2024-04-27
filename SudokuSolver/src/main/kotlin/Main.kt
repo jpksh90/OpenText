@@ -78,9 +78,6 @@ class Sudoku(private var puzzle: Array<Array<Int>>) {
         return buffer.toString()
     }
 
-    fun print() {
-        println(prettyPrintBoard())
-    }
 
     fun nbIterations(): Int {
         return iteration
@@ -91,18 +88,18 @@ class Sudoku(private var puzzle: Array<Array<Int>>) {
 fun run(puzzle: Array<Array<Int>>) {
     val sudoku = Sudoku(puzzle)
     println("Initial Board")
-    sudoku.print()
+    println(sudoku)
 
     val begin = System.currentTimeMillis();
     if (sudoku.solve()) {
         val end = System.currentTimeMillis();
         println("Solved Board")
-        sudoku.print();
+        println(sudoku)
         println("Solved in ${sudoku.nbIterations()} iterations in ${end - begin} milliseconds")
 
     } else {
         println("failed to solve")
-        sudoku.print()
+        println(sudoku)
     }
 }
 
