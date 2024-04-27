@@ -19,7 +19,7 @@ There are two ways run it
 
 ## Algorithm
 
-The solution follows a backtracking which follows an exhaustive search on the possible configuration of sudoku. For a given state of the candidate solution, it checks if the candidate solution is valid. Then it proceeds to solve with the 
+The solution follows a backtracking (iterative) which follows an exhaustive search on the possible configuration of sudoku. For a given state of the candidate solution, it checks if the candidate solution is valid. Then it proceeds to solve with the 
 candidate solution. At some point, if it encounters that the solution is no more feasible, it backtracks and starts with another candidate solution.
 
 ## Design
@@ -31,4 +31,4 @@ candidate solution. At some point, if it encounters that the solution is no more
 - The program has been modularized such that the developer can read the program to get the idea what is does. Variable names also follow a simple pattern
 # Issues faced
 - Choosing the right way to run this program. I wanted the reviewer to run the script on any platform. Therefore, I choose to stick to the native environment where the user can run it via a simple gradle run command.
-- Initially, I had the impression that it will overflow for difficult cases that I mitigated it by only backtracking on the unfilled cells. I ran it over 4 difficult test cases and observed the runtimes to see if it is admissible. All experiments were tested on MacBook Pro M3 laptop with 18 GB of RAM.
+- Initially, I had the impression that it will overflow for difficult cases that I mitigated it by writing an iterative version. I ran it over 4 difficult test cases and observed the runtimes to see if it is admissible. All experiments were tested on MacBook Pro M3 laptop with 18 GB of RAM.

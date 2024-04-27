@@ -1,8 +1,9 @@
 package solution
 
-class Sudoku(private var puzzle: Array<Array<Int>>) {
-    private var iteration: Int = 0
+import java.util.*
 
+class Sudoku(private val puzzle: Array<Array<Int>>) {
+    private var iteration: Int = 0
 
     private fun nextCell(): Pair<Int, Int> {
         for (row in puzzle.indices) {
@@ -38,23 +39,33 @@ class Sudoku(private var puzzle: Array<Array<Int>>) {
     }
 
     fun solve(): Boolean {
-        ++iteration
-        var (row, col) = nextCell()
-        if (row == -1 && col == -1) {
-            println("all cells filled")
-            return true;
-        } else {
-            for (num in 1..9) {
-                if (isValid(row, col, num)) {
-                    puzzle[row][col] = num
-                    if (solve()) {
-                        return true
+        val stack = Stack<Pair<Int, Int>>()
+        stack.push(nextCell())
+
+        while (stack.isNotEmpty()) {
+            val (row, col) = stack.peek()
+            if (row == -1 && col == -1) {
+                println("all cells filled")
+                return true
+            } else {
+                var num = puzzle[row][col] + 1
+                var validCandidate = false
+                while (num <= 9 && !validCandidate) {
+                    if (isValid(row, col, num)) {
+                        puzzle[row][col] = num
+                        stack.push(nextCell())
+                        validCandidate = true
+                    } else {
+                        num++
                     }
+                }
+                if (!validCandidate) {
                     puzzle[row][col] = 0
+                    stack.pop()
                 }
             }
-            return false
         }
+        return false
     }
 
 
@@ -96,7 +107,6 @@ fun run(puzzle: Array<Array<Int>>) {
         println("Solved Board")
         println(sudoku)
         println("Solved in ${sudoku.nbIterations()} iterations in ${end - begin} milliseconds")
-
     } else {
         println("failed to solve")
         println(sudoku)
