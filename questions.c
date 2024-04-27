@@ -62,7 +62,8 @@ void func3()
         }
         else
         {
-            // The handle is not closed on the login failure and is kept open. 
+            // The handle is not closed on the login failure and is kept open which is a memory leak.
+            // Attackers can exploit this to launch buffer overflow attacks.
             printf("Unable to login.\n"); 
         }
     }
@@ -94,7 +95,9 @@ void func5()
     {
         printf("%d\n", i);
         i = (i + 1) % 256; 
-        // could run into an infinite loop. This program could starve other program from accessing system resources leading to a denial-of-service to other processes
+        // This could run into an infinite loop. 
+        // This program could starve other processes from accessing 
+        // system resources leading to a denial-of-service to other processes
     } while (i >= 0);
 }
 
@@ -104,8 +107,7 @@ void func6()
     char *data = dataBuffer;
     printf("Please enter a string: "); 
     // If the user inputs more than 100 characters, the fgets will not flush the buffer and will keep all the 
-    // unread characters in the buffer. This buffer may be read by subsequent processes or operations leading to the leak
-    // of (sensitive) information.
+    // unread characters in the buffer. This buffer may be read by subsequent processes or operations which can leak (sensitive) information.
     if (fgets(data, 100, stdin) < 0)
     {
         printf("fgets failed!\n");
