@@ -43,6 +43,7 @@ class Sudoku(private val puzzle: Array<Array<Int>>) {
         stack.push(nextCell())
 
         while (stack.isNotEmpty()) {
+            ++iteration
             val (row, col) = stack.peek()
             if (row == -1 && col == -1) {
                 println("all cells filled")
