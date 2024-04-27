@@ -1,7 +1,8 @@
 package solution
 
 class Sudoku(private var puzzle: Array<Array<Int>>) {
-    private var count: Int = 0
+    private var iteration: Int = 0
+
 
     private fun nextCell() : Pair<Int, Int> {
         for (row in puzzle.indices) {
@@ -13,6 +14,8 @@ class Sudoku(private var puzzle: Array<Array<Int>>) {
         }
         return Pair(-1,-1)
     }
+
+
 
     private fun isValid(row: Int, col: Int, num: Int): Boolean {
         for (i in puzzle.indices) {
@@ -37,8 +40,8 @@ class Sudoku(private var puzzle: Array<Array<Int>>) {
     }
 
     fun solve() : Boolean {
-        ++count
-        val (row, col) = nextCell()
+        ++iteration
+        var (row, col) = nextCell()
         if (row== -1 && col == -1) {
             println("all cells filled")
             return true;
@@ -56,9 +59,10 @@ class Sudoku(private var puzzle: Array<Array<Int>>) {
         }
     }
 
+
     private fun prettyString() : String {
         val buffer : StringBuilder = StringBuilder();
-        buffer.append("\n-----------------------\n")
+        buffer.append("_______________________\n")
         for (i in puzzle.indices) {
             buffer.append("|")
             for (j in puzzle[i].indices) {
@@ -68,7 +72,7 @@ class Sudoku(private var puzzle: Array<Array<Int>>) {
                 }
             }
             if (i%3 == 2) {
-                buffer.append("\n-----------------------\n")
+                buffer.append("\n______________________\n")
             } else {
                 buffer.append("\n")
             }
@@ -81,13 +85,14 @@ class Sudoku(private var puzzle: Array<Array<Int>>) {
     }
 
     fun nbIterations() : Int {
-        return count
+        return iteration
     }
 
 }
 
 fun run(puzzle: Array<Array<Int>>) {
     val sudoku = Sudoku(puzzle)
+    sudoku.solve()
 
     println("Initial Board")
     sudoku.print()
