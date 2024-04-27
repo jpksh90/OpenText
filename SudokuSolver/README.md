@@ -13,7 +13,7 @@ There are two ways run it
 
 ### Through gradle
 
-1. Issue the command `./gradlew run`
+1. Issue the command `./gradlew run` on terminal from the directory.
 
 # Architecture
 
@@ -31,3 +31,4 @@ candidate solution. At some point, if it encounters that the solution is no more
 - The program has been modularized such that the developer can read the program to get the idea what is does. Variable names also follow a simple pattern
 # Issues faced
 - Choosing the right way to run this program. I wanted the reviewer to run the script on any platform. Therefore, I choose to stick to the native environment where the user can run it via a simple gradle run command.
+- Initially, I had the impression that it will overflow for difficult cases. I mitigated it by only backtracking on the unfilled cells. I run it over 4 difficult test cases ans observed the runtimes to see if it is admissible. All experiments were tested on MacBook Pro M3 laptop with 18 GB of RAM.
