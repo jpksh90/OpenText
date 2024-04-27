@@ -1,7 +1,5 @@
 package solution
 
-import java.util.*
-
 class Sudoku(private val puzzle: Array<Array<Int>>) {
     private var iteration: Int = 0
 
@@ -39,34 +37,23 @@ class Sudoku(private val puzzle: Array<Array<Int>>) {
     }
 
     fun solve(): Boolean {
-        val stack = Stack<Pair<Int, Int>>()
-        stack.push(nextCell())
-
-        while (stack.isNotEmpty()) {
-            ++iteration
-            val (row, col) = stack.peek()
-            if (row == -1 && col == -1) {
-                println("all cells filled")
-                return true
-            } else {
-                var num = puzzle[row][col] + 1
-                var validCandidate = false
-                while (num <= 9 && !validCandidate) {
-                    if (isValid(row, col, num)) {
-                        puzzle[row][col] = num
-                        stack.push(nextCell())
-                        validCandidate = true
-                    } else {
-                        num++
+        ++iteration
+        val (row, col) = nextCell()
+        if (row == -1 && col == -1) {
+            println("all cells filled")
+            return true;
+        } else {
+            for (num in 1..9) {
+                if (isValid(row, col, num)) {
+                    puzzle[row][col] = num
+                    if (solve()) {
+                        return true
                     }
-                }
-                if (!validCandidate) {
                     puzzle[row][col] = 0
-                    stack.pop()
                 }
             }
+            return false
         }
-        return false
     }
 
 
@@ -115,7 +102,7 @@ fun run(puzzle: Array<Array<Int>>) {
 }
 
 fun testDifficult1() {
-    println("\n\nRunning Difficult Testcase 1")
+    println("\n\nRunning Difficult Testcase 1 (Given in the sheet)")
     run(
         arrayOf(
             arrayOf(0, 0, 2, 0, 0, 0, 0, 4, 1),
@@ -175,7 +162,7 @@ fun testDifficult4() {
 }
 
 fun testEasy() {
-    println("\n\nRunning Easy Testcase")
+    println("\n\nRunning Easy Testcase (Given in the sheet)")
     run(
         arrayOf(
             arrayOf(0, 1, 3, 8, 0, 0, 4, 0, 5),
